@@ -1,24 +1,6 @@
 #Micah Wiesner
 #December 2018
 
-#Statement of problem find 
-
-install.packages('randomForest')
-install.packages('varImp')
-install.packages('tidyr')
-library(tidyr)
-library(randomForest)
-library(varImp)
-
-
-regressor <- randomForest(Target ~ . , data       = data, importance=TRUE) # fit the random forest with default parameter
-varImp(regressor) # get variable importance, based on mean decrease in accuracy
-varImp(regressor, conditional=TRUE) # conditional=True, adjusts for correlations between predictors
-varimpAUC(regressor) # more robust towards class imbalance.
-
-
-
-
 peakflow_df <- read.csv("Peak_Flow.csv", sep = ",", header = T, na.strings = c("0", "NA"))
 
 #This dataframe is 194x105 and contains information from NY state creeks and rivers
