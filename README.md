@@ -7,7 +7,7 @@ A 100-year flood is defined as having a 1% chance of occurring in any given year
 Given a dataset of NY rivers and using simple multiple linear regression and random forest decision trees can we make a model to accurately predict the discharge of a 100-year flood on said rivers. 
 
 ## Dataset
-This data and similar data can be downloaded from https://waterdata.usgs.gov/nwis
-194 rivers in New York x 100 explanatory variables
+This data and similar data can be downloaded from https://waterdata.usgs.gov/nwis  
+194 rivers in New York x 100 explanatory variables  
 Some examples of explanatory variables are the area of the watershed going into the river, the peak elevation within the watershed, amount of precipitation for any given month, etc. The dependent variable is Q100 which has been calculated through empirical data. 
 
