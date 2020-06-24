@@ -1,5 +1,7 @@
-#Now I would like to run a lasso, ridge, and elastic net regression model to examine the fit of each model and also understand which variables
-#are penalized most and don't need to be included in the model
+#Micah Wiesner
+#Dec 2018
+
+#Here I will be using elastic net, ridge, and lasso regression to improve upon the Multiple Linear Regression model
 
 #Fit a lasso model
 set.seed(123)
@@ -48,3 +50,29 @@ elastic_net_vars <- elastic_net_coeff[lasso_coeff > 0]
 #"none" (only fits one model to the entire training set), 
 #"oob" (only for random forest, bagged trees, bagged earth, bagged flexible discriminant analysis, or conditional tree forest models), timeslice, 
 #"adaptive_cv", "adaptive_boot" or "adaptive_LGOCV"
+
+#Predict each model
+lasso_pred <- as.matrix(cbind(const = 1, test_X)) %*% coef(lasso_model)
+ridge_pred <- as.matrix(cbind(const = 1, test_X)) %*% coef(ridge_model)
+elastic_net_pred <- as.matrix(cbind(const = 1, test_X)) %*% coef(elastic_net_model)
+
+#%*% matrix multiplication in R
+lasso_cor <- cor(test_Y, lasso_pred[,1])^2
+ridge_cor <- cor(test_Y, ridge_pred[,1])^2
+elastic_net_cor <- cor(test_Y, elastic_net_pred[,1] )^2
+
+plot.new()
+par(mfrow = c(1,1))
+plot(test_Y, model_Y, main = 'Model Comparison', 
+     xlab = 'Actual (Testing Set)', ylab = 'Model') 
+lines(xx, yy, lty = 2)
+points(test_Y, lasso_pred[,1], col = 'black', pch = 21, bg = 'darkgreen')
+points(test_Y, ridge_pred[,1], col = 'black', pch = 21, bg = 'darkred')
+points(test_Y, elastic_net_pred[,1], col = 'black', pch = 21, bg = 'blue')
+legend(25000, 200000, legend = c("Lasso", "Ridge", "Elastic Net", "Simple"),
+      col = c("black"), pch = 21,
+      pt.bg = c("darkgreen","darkred", 'blue', 'white'))
+
+RMS_Lasso <- round(sum(abs(test_Y - lasso_pred[,1])))
+RMS_Ridge <- round(sum(abs(test_Y - ridge_pred[,1])))
+RMS_EN <- round(sum(abs(test_Y - elastic_net_pred[,1])))
