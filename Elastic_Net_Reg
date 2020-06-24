@@ -1,0 +1,50 @@
+#Now I would like to run a lasso, ridge, and elastic net regression model to examine the fit of each model and also understand which variables
+#are penalized most and don't need to be included in the model
+
+#Fit a lasso model
+set.seed(123)
+lasso_model <- cv.glmnet(as.matrix(train_X), train_Y, lambda = 10^seq(4,-1,-.1), alpha = 1)
+
+best_lambda <- lasso_model$lambda.1se
+lasso_coeff <- lasso_model$glmnet.fit$beta[, lasso_model$glmnet.fit$lambda == best_lambda]
+#alpha sets degree of mixing between the two models
+#alpha = 1 is lasso, alpha = 0 is ridge, alpha in between is elastic net
+
+#Meanwhile, 𝜆 is the shrinkage parameter: when 𝜆=0, no shrinkage is performed
+#and as 𝜆 increases, the coefficients are shrunk ever more strongly.
+#This happens regardless of the value of 𝛼.
+
+#Fit elastic net model
+set.seed(123)
+elastic_net_model <- cv.glmnet(as.matrix(train_X), train_Y, lambda = 10^seq(4,-1,-.1), alpha = 0.5)
+
+best_lambda <- elastic_net_model$lambda.1se
+elastic_net_coeff <- elastic_net_model$glmnet.fit$beta[, elastic_net_model$glmnet.fit$lambda == best_lambda]
+
+#Fit Ridge Regression model
+set.seed(123)
+ridge_model <- cv.glmnet(as.matrix(train_X), train_Y, lambda = 10^seq(4,-1,-.1), alpha = 0)
+
+best_lambda <- ridge_model$lambda.1se
+ridge_coeff <- ridge_model$glmnet.fit$beta[, ridge_model$glmnet.fit$lambda == best_lambda]
+
+#Plot and compare
+plot.new()
+par(mfrow = c(3,1))
+plot(elastic_net_model, main = 'Lasso regression')
+plot(lasso_model, main = 'Elastic net regression')
+plot(ridge_model, main = 'Ridge regression')
+
+coef <- data.frame(
+  lasso = lasso_coeff,
+  elastic_net = elastic_net_coeff,
+  ridge = ridge_coeff)
+
+lasso_vars <- lasso_coeff[lasso_coeff > 0]
+elastic_net_vars <- elastic_net_coeff[lasso_coeff > 0]
+
+#Cross Validation
+#The resampling method: "boot", "boot632", "optimism_boot", "boot_all", "cv", "repeatedcv", "LOOCV", "LGOCV" (for repeated training/test splits), 
+#"none" (only fits one model to the entire training set), 
+#"oob" (only for random forest, bagged trees, bagged earth, bagged flexible discriminant analysis, or conditional tree forest models), timeslice, 
+#"adaptive_cv", "adaptive_boot" or "adaptive_LGOCV"
