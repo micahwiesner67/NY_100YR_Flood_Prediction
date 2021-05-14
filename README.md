@@ -19,8 +19,6 @@ Some examples of explanatory variables are the area of the watershed going into 
 ## Next Steps
 This model needs to be run with more cross-validation to confirm the above conclusions/
 
-### Note:
-This analysis was done in the early stages of understanding R (Fall, 2018) and, thus, I use only base R. I also utilize for-loops and some if-statements (things that are generally ill-advised in R)
 
 
 
